@@ -1,0 +1,577 @@
+import React, { useState, useMemo, useEffect } from 'react';
+import { 
+  Brain, Wrench, BookOpen, Heart, Zap, ShieldCheck, 
+  ArrowRight, Activity, MousePointer2, Cpu, Database, 
+  Network, GitGraph, MessageSquareText, ScanEye, Lock,
+  Clock, Layers, Users, ShieldAlert, Sparkles, UserCheck,
+  ShieldEllipsis, Terminal, HardDrive, Smartphone, Compass,
+  ChevronRight, Lightbulb, Workflow, Info, Eye, CheckCircle2,
+  AlertCircle, Fingerprint, Waves, Briefcase, Shield, Search,
+  Settings, Server, Globe, Package, ShoppingCart, Map, HelpCircle,
+  BarChart3, Mic, X, Code, ChevronDown, ListTree, ActivitySquare
+} from 'lucide-react';
+
+/**
+ * 核心组件：100个Agent能力矩阵
+ */
+const CapabilityMatrix = () => {
+  const categories = useMemo(() => [
+    { title: "神经感知层", icons: [Activity, Eye, Mic], list: ["流式ASR算子", "声纹生物鉴权", "全频段环境噪音识别", "6轴IMU空间定位", "视觉语义对象检测", "人脸特征向量化", "多模态信号融合", "微表情压力分析", "UWB室内测距", "神经冲动预判"] },
+    { title: "会话语义层", icons: [MessageSquareText, Users], list: ["多轮意图蒸馏", "槽位冲突仲裁", "Zero-shot指代消解", "有限状态机管理", "上下文语义保持", "话题动态切换", "主动澄清策略", "短期会话缓存", "动态偏好推断", "打扰度预算评估"] },
+    { title: "情绪共情层", icons: [Heart, Sparkles], list: ["V-A情感空间映射", "安抚策略选择器", "幽默因子生成", "心理临床路径匹配", "自适应语气调节", "开放域情感交互", "情绪轨迹追踪", "长期压力预测", "情感危机防火墙", "认知重塑建议"] },
+    { title: "认知规划层", icons: [GitGraph, Brain], list: ["HTN层次任务分解", "DAG并发执行编排", "状态空间路径搜索", "失败自补偿模型", "资源竞争仲裁", "动态优先级重排", "多目标约束满足", "备选计划预热", "执行效率优化", "因果逻辑链验证"] },
+    { title: "执行编译器", icons: [Wrench, Cpu], list: ["跨域工具路由", "参数动态Schema检查", "Atomic事务调用", "执行流分布式追踪", "自动退避重试", "事务级回滚策略", "状态最终一致性", "调用结果格式化", "工具链管道化", "插件化能力注入"] },
+    { title: "全屋智能中枢", icons: [Smartphone, Layers], list: ["Matter协议转换器", "Zigbee低时延桥接", "空间设备拓扑映射", "多端协同同步器", "设备健康度巡检", "能耗自适应管理", "边缘场景自动化", "情境感知感知器", "智能日程对齐", "故障根因分析"] },
+    { title: "零信任安防层", icons: [Shield, Lock], list: ["连续生物识别锁", "动态令牌下发", "视觉边界检测", "传感器入侵防御", "异常行为模型", "加密审计日志", "身份连续性验证", "家庭成员图谱", "隐私敏感数据掩码", "硬件级TEE隔离"] },
+    { title: "增值业务智能体", icons: [ShoppingCart, Map], list: ["外卖意图自动映射", "电商SKU精准检索", "医疗预约专家体", "出行路径动态规划", "酒店偏好对齐器", "机票智能改签系统", "地理围栏服务", "本地生活专家体", "消费合规监控", "服务纠纷自动化"] },
+    { title: "记忆管理OS", icons: [Database, HardDrive], list: ["时序感知缓存", "持久化语义存储", "事件片段化索引", "关系权重增强", "偏好演进算法", "混合检索引擎", "记忆垃圾回收", "知识冲突解决", "全量数据索引", "主动遗忘机制"] },
+    { title: "系统元治理层", icons: [ShieldCheck, ShieldEllipsis], list: ["模型路由选择器", "策略风险阻断", "Prompt注入过滤", "数据脱敏网关", "行为合规审计", "可解释推理输出", "黑盒执行回放", "伦理准则约束", "分布式资源调度", "Token成本优化"] }
+  ], []);
+
+  const [filter, setFilter] = useState('');
+
+  return (
+    <div className="space-y-6">
+      <div className="relative">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+        <input 
+          type="text" 
+          placeholder="搜索 100+ 项智能体原子能力..." 
+          className="w-full pl-12 pr-4 py-3 bg-slate-100 border-none rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
+          onChange={(e) => setFilter(e.target.value)}
+        />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+        {categories.map((cat, i) => {
+          const CatIcon = cat.icons[0];
+          const filteredList = cat.list.filter(item => item.includes(filter));
+          if (filter && filteredList.length === 0) return null;
+          
+          return (
+            <div key={i} className="space-y-3">
+              <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                <CatIcon size={12} /> {cat.title}
+              </h5>
+              <div className="space-y-1">
+                {filteredList.map((item, j) => (
+                  <div key={j} className="px-3 py-2 bg-white border border-slate-50 rounded-xl text-[11px] font-medium text-slate-600 hover:border-indigo-200 hover:text-indigo-600 transition-colors cursor-default">
+                    {i * 10 + j + 1}. {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+/**
+ * 深度详情组件：展示模块内部的硬核设计
+ */
+const TechnicalDeepDive = ({ module, onBack }) => {
+  if (!module) return null;
+
+  return (
+    <div className="absolute inset-0 bg-slate-950 z-[100] overflow-y-auto animate-in fade-in zoom-in-95 duration-500 p-6 md:p-12 text-slate-300 font-sans">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-12 border-b border-white/10 pb-6">
+          <div className="flex items-center gap-4">
+            <div className={`p-4 rounded-2xl bg-${module.color}-500/20 text-${module.color}-400 shadow-lg`}>
+              <module.icon size={32} />
+            </div>
+            <div>
+              <h2 className="text-3xl font-black text-white tracking-tight">{module.name} - 底层架构规格</h2>
+              <p className="text-slate-500 font-mono text-xs uppercase tracking-widest mt-1">INDUSTRIAL-GRADE AGENT OS SPECIFICATION</p>
+            </div>
+          </div>
+          <button 
+            onClick={onBack}
+            className="p-3 rounded-full hover:bg-white/10 transition-colors text-slate-400 group"
+          >
+            <X size={24} className="group-hover:rotate-90 transition-transform" />
+          </button>
+        </div>
+
+        {/* Grid Layout for Tech Specs */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* Column 1: Implementation Strategy */}
+          <div className="space-y-8">
+            <section>
+              <h4 className="flex items-center gap-2 text-indigo-400 font-bold mb-4 uppercase text-xs tracking-widest">
+                <Settings size={14} /> 技术实现栈 (Tech Stack)
+              </h4>
+              <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
+                <p className="text-sm leading-relaxed mb-4 text-slate-400">{module.details.strategy}</p>
+                <div className="space-y-3">
+                  {module.details.bullets.map((b, i) => (
+                    <div key={i} className="flex gap-3 text-xs">
+                      <div className="mt-1 text-indigo-500"><CheckCircle2 size={12} /></div>
+                      <span className="text-slate-300">{b}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h4 className="flex items-center gap-2 text-emerald-400 font-bold mb-4 uppercase text-xs tracking-widest">
+                <Activity size={14} /> 核心逻辑算子 (Core Operators)
+              </h4>
+              <div className="bg-slate-900 rounded-2xl p-4 border border-white/10 font-mono text-[11px] leading-relaxed">
+                <div className="flex items-center justify-between mb-3 pb-2 border-b border-white/5">
+                  <span className="text-slate-500">kernel_logic.rs</span>
+                  <Code size={12} className="text-slate-500" />
+                </div>
+                <pre className="text-emerald-400 overflow-x-auto whitespace-pre-wrap selection:bg-emerald-500/30">
+                  {module.details.code}
+                </pre>
+              </div>
+            </section>
+          </div>
+
+          {/* Column 2: Architecture Diagram (SVG Simulation) */}
+          <div className="lg:col-span-2 space-y-8">
+            <section>
+              <h4 className="flex items-center gap-2 text-amber-400 font-bold mb-4 uppercase text-xs tracking-widest">
+                <Workflow size={14} /> 模块拓扑与数据流图 (Topology)
+              </h4>
+              <div className="bg-white/5 rounded-3xl border border-white/10 p-8 flex items-center justify-center min-h-[400px] relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '20px 20px'}}></div>
+                {/* SVG Architecture simulation */}
+                <svg viewBox="0 0 600 350" className="w-full max-w-lg h-auto relative z-10">
+                   <rect x="200" y="10" width="200" height="70" rx="12" fill="rgba(99, 102, 241, 0.15)" stroke="#6366f1" strokeWidth="2" />
+                   <text x="300" y="45" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">HTN Planner Agent</text>
+                   <text x="300" y="65" textAnchor="middle" fill="#818cf8" fontSize="9">State Space Search Engine</text>
+                   
+                   <line x1="300" y1="80" x2="300" y2="120" stroke="rgba(255,255,255,0.2)" strokeDasharray="4" />
+                   
+                   <rect x="30" y="130" width="160" height="60" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.15)" />
+                   <text x="110" y="160" textAnchor="middle" fill="#f8fafc" fontSize="11">Proprioceptive Layer</text>
+                   <text x="110" y="175" textAnchor="middle" fill="#64748b" fontSize="8">Sensor Fusion (IMU+ECG)</text>
+                   
+                   <rect x="220" y="130" width="160" height="60" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.15)" />
+                   <text x="300" y="160" textAnchor="middle" fill="#f8fafc" fontSize="11">Graph RAG Context</text>
+                   <text x="300" y="175" textAnchor="middle" fill="#64748b" fontSize="8">Semantic Knowledge Hub</text>
+                   
+                   <rect x="410" y="130" width="160" height="60" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.15)" />
+                   <text x="490" y="160" textAnchor="middle" fill="#f8fafc" fontSize="11">IDL-Based Invoker</text>
+                   <text x="490" y="175" textAnchor="middle" fill="#64748b" fontSize="8">Atomic Action Dispatch</text>
+
+                   <path d="M110 190 V240 H220" fill="none" stroke="rgba(255,255,255,0.1)" markerEnd="url(#arrow)" />
+                   <path d="M490 190 V240 H380" fill="none" stroke="rgba(255,255,255,0.1)" markerEnd="url(#arrow)" />
+                   
+                   <rect x="220" y="230" width="160" height="90" rx="15" fill="rgba(16, 185, 129, 0.08)" stroke="#10b981" strokeWidth="1.5" />
+                   <text x="300" y="270" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">Verified Action Hub</text>
+                   <text x="300" y="295" textAnchor="middle" fill="#10b981" fontSize="9">Formal Safety Proof ✅</text>
+
+                   <defs>
+                      <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+                        <path d="M0,0 L8,4 L0,8 Z" fill="rgba(255,255,255,0.2)" />
+                      </marker>
+                   </defs>
+                </svg>
+              </div>
+            </section>
+
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                <h5 className="text-xs font-bold text-slate-400 mb-4 uppercase tracking-wider flex items-center gap-2">
+                   <BarChart3 size={14} /> 实时 SLA 指标
+                </h5>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[11px] text-slate-400">意图对齐延迟 (P99)</span>
+                    <span className="text-xs font-mono text-emerald-400">142ms</span>
+                  </div>
+                  <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-emerald-500 h-full w-[92%]" />
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[11px] text-slate-400">零点击任务成功率</span>
+                    <span className="text-xs font-mono text-emerald-400">97.4%</span>
+                  </div>
+                  <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-emerald-500 h-full w-[97%]" />
+                  </div>
+                </div>
+              </div>
+              <div className="p-6 rounded-2xl bg-indigo-500/10 border border-indigo-500/20">
+                <h5 className="text-xs font-bold text-indigo-400 mb-4 uppercase tracking-wider flex items-center gap-2">
+                   <Cpu size={14} /> SoC 计算开销 (NPU/DSP)
+                </h5>
+                <p className="text-[11px] leading-relaxed text-slate-400 mb-4">
+                  通过 TVM 编译器优化，实现了针对 Arm Ethos-U 的量化推断。本地常驻模型仅占 4.2MB 显存。
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-0.5 bg-indigo-500/20 text-indigo-300 rounded text-[9px] font-bold border border-indigo-500/30 tracking-tight">INT8 Quantized</span>
+                  <span className="px-2 py-0.5 bg-indigo-500/20 text-indigo-300 rounded text-[9px] font-bold border border-indigo-500/30 tracking-tight">Cortex-M85</span>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const App = () => {
+  const [activeTab, setActiveTab] = useState('architecture');
+  const [selectedModule, setSelectedModule] = useState(null);
+
+  // 知识域模块定义，包含深度细节
+  const domains = useMemo(() => [
+    { 
+      id: 'emotion', 
+      name: '情绪动力学知识库', 
+      icon: Heart, 
+      color: 'pink', 
+      desc: '基于 V-A 情感空间的动态博弈话术与心理临床路径。',
+      details: {
+        strategy: "系统采用‘双系统认知模型’。系统一负责快速共情（边缘推断），系统二负责深度疏导（云端规划）。利用 Transformer 解码器在受限行动空间内生成安抚文本。",
+        bullets: ["集成 DSM-5 临床干预逻辑分支", "自研情绪指纹识别算法 (Accuracy > 94%)", "基于人类反馈的个性化幽默微调"],
+        code: `// 情绪响应算子：实现基于受限玻尔兹曼机的情绪转移预测
+pub fn predict_affect_transition(current: AffectiveState, stimulus: Vec<f32>) -> Transition {
+    let energy = calculate_energy(current, stimulus);
+    let probability = energy.exp() / partition_function();
+    Transition::from_prob(probability)
+}`
+      }
+    },
+    { 
+      id: 'user', 
+      name: '多维用户图谱库', 
+      icon: UserCheck, 
+      color: 'indigo', 
+      desc: '包含行为基线、社交拓扑与跨设备权限的动态关联。',
+      details: {
+        strategy: "采用分布式图存储（Graph OS）。不仅记录‘用户喜欢什么’，更通过知识图谱推理‘为什么现在推荐这个’。实现联邦学习下的隐私偏好同步。",
+        bullets: ["支持基于本体推理的冷启动推荐", "动态社交半径算法 (Family Circle v3)", "语义化偏好嵌入 (Embedding Size: 768)"],
+        code: `// Cypher 查询：提取用户在特定情境下的隐性偏好链
+MATCH (u:User {uid: "U128"})-[:HABIT {context: "Morning"}]->(action:Action)
+WHERE action.frequency > threshold
+WITH action
+MATCH (action)-[:REQUIRES]->(capability:Tool)
+RETURN capability.id, action.weight`
+      }
+    },
+    { 
+      id: 'task', 
+      name: '任务规划本体库', 
+      icon: GitGraph, 
+      color: 'purple', 
+      desc: 'HTN 任务分解模版与具备因果逻辑的执行链路计划。',
+      details: {
+        strategy: "将任务抽象为‘状态空间搜索问题’。Agent 不只是线性执行，而是在每一步都进行自检。支持长程任务的任务挂起与上下文恢复。",
+        bullets: ["具备原子事务保障的分布式执行流", "基于 HTN (Hierarchical Task Network) 的实时规划器", "智能故障根因分析与自修复建议"],
+        code: `// 层次任务规划逻辑
+class TaskPlanner {
+  async decompose(goal: Goal): Promise<TaskNode[]> {
+    const methods = this.knowledge.getAvailableMethods(goal);
+    const bestPlan = heuristicSearch(methods, currentWorldState);
+    return bestPlan.compileToDag();
+  }
+}`
+      }
+    },
+    { 
+      id: 'safety', 
+      name: '零信任安全规则域', 
+      icon: Shield, 
+      color: 'red', 
+      desc: '包含持续生物验证、数据掩码与意图拦截策略。',
+      details: {
+        strategy: "构建‘意图级’防火墙。在 Agent 产生任何执行意愿前，系统会根据‘最小特权原则’通过 TEE（可信执行环境）进行实时交叉审计。",
+        bullets: ["支持 1024-bit 端到端量子抗性加密", "基于 ECG 心电特征的‘无感’身份连续性挑战", "Prompt 注入攻击实时语义拦截 (WAF for AI)"],
+        code: `// 零信任访问控制逻辑
+fn verify_agent_intent(intent: &Intent, user_ctx: &Context) -> Result<Auth, SecurityError> {
+    if intent.risk_level > Risk::Low && !user_ctx.is_continuous_verified() {
+        return Err(SecurityError::AuthRequired);
+    }
+    PolicyEngine::evaluate(intent, user_ctx.permissions)
+}`
+      }
+    }
+  ], []);
+
+  return (
+    <div className="min-h-screen bg-[#F1F5F9] text-slate-900 font-sans pb-24 relative overflow-x-hidden">
+      
+      {/* Deep Dive Overlay */}
+      {selectedModule && (
+        <TechnicalDeepDive 
+          module={selectedModule} 
+          onBack={() => setSelectedModule(null)} 
+        />
+      )}
+
+      {/* Top Professional Header */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-black shadow-lg">A</div>
+            <span className="font-black tracking-tighter text-slate-800 uppercase">EMBODIED AGENT OS</span>
+          </div>
+          <div className="flex gap-1 bg-slate-100 p-1 rounded-xl overflow-x-auto no-scrollbar max-w-[50%]">
+            {[
+              { id: 'architecture', name: '系统架构', icon: Layers },
+              { id: 'knowledge', name: '全域知识图谱', icon: BookOpen },
+              { id: 'agents', name: '100项核心能力', icon: Cpu },
+              { id: 'strategy', name: '战略壁垒', icon: Briefcase }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+                  activeTab === tab.id 
+                  ? 'bg-white text-indigo-600 shadow-sm' 
+                  : 'text-slate-400 hover:text-slate-600'
+                }`}
+              >
+                <tab.icon size={14} />
+                {tab.name}
+              </button>
+            ))}
+          </div>
+          <div className="hidden lg:flex items-center gap-3 text-[10px] font-black text-slate-300 uppercase tracking-widest">
+            <div className="flex gap-1">
+              <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            </div>
+            Tech Specs v2.8 (Industrial)
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-6 pt-12">
+        {/* Intro Section */}
+        <div className="mb-16">
+          <div className="flex items-center gap-2 text-indigo-500 font-black text-xs uppercase tracking-[0.2em] mb-4">
+             <Cpu size={14} /> Systems Engineering
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-6 text-slate-900 leading-[1.1]">
+            从算法模型到物理执行：<br />
+            <span className="text-indigo-600 font-extrabold underline decoration-indigo-200 underline-offset-8">下一代实体智能操作系统</span>
+          </h2>
+          <p className="text-lg text-slate-500 max-w-3xl leading-relaxed">
+            我们不仅仅是在做交互，而是在构建一套<b>“身体-物理-数字”</b>三域对齐的底层协议。
+            Agent OS 通过<b>因果推理 (Causal Inference)</b> 赋予戒指真正的决策能力。
+            <br />
+            <span className="text-sm font-bold text-indigo-500 mt-6 inline-flex items-center gap-2">
+              <ArrowRight size={16} /> 点击下方模块探索高度工程化的设计细节
+            </span>
+          </p>
+        </div>
+
+        {/* Tab Content Rendering */}
+        {activeTab === 'architecture' && (
+          <div className="animate-in fade-in duration-700">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="space-y-6">
+                {[
+                  { title: "认知分层 (Layered Cognition)", desc: "边缘侧处理 80% 的Proprioception(本觉)感知，云端负责长程任务规划。支持断网状态下的基础生活语义保障。", icon: Brain, color: "indigo" },
+                  { title: "HTN 任务编排引擎", desc: "基于层次任务网络的规划系统，实现从用户模糊意图到 Matter 原子操作的精准映射。具备失败自补偿与状态回退。", icon: Wrench, color: "emerald" },
+                  { title: "分布式工具总线", desc: "统一抽象各种 IOT 协议。支持自定义插件式能力注入，通过 IDL 强约束定义每一个工具的权限边界。", icon: Zap, color: "amber" }
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-6 group cursor-pointer hover:translate-x-1 transition-transform border-l-2 border-transparent hover:border-indigo-500 pl-4 py-2">
+                    <div className={`w-12 h-12 rounded-2xl bg-${item.color}-50 flex items-center justify-center text-${item.color}-600 shrink-0 shadow-sm border border-${item.color}-100`}>
+                      <item.icon size={24} />
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold mb-1 group-hover:text-indigo-600 transition-colors">{item.title}</h4>
+                      <p className="text-sm text-slate-500 leading-relaxed">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="bg-slate-900 rounded-[3rem] p-10 text-white relative overflow-hidden shadow-2xl border border-white/5 group">
+                 <div className="font-mono text-[10px] space-y-4 opacity-70">
+                    <p className="text-indigo-400 tracking-widest mb-4">SYSTEM_KERNEL_LOG: AGENT_OS_RTOS_2.8</p>
+                    <div className="flex gap-3">
+                      <span className="text-emerald-400">[READY]</span> 
+                      <span>CORE_SCHEDULER: Hierarchical Task Network Loaded</span>
+                    </div>
+                    <div className="flex gap-3">
+                      <span className="text-emerald-400">[READY]</span> 
+                      <span>SENSOR_SYNC: IMU (100Hz) & HeartRate aligned</span>
+                    </div>
+                    <div className="flex gap-3 text-emerald-400">
+                      <span>[INTENT]</span> 
+                      <span>"指着电视调亮一点" - Multimodal aligned.</span>
+                    </div>
+                    <div className="flex gap-3">
+                      <span className="text-indigo-400">[PLANNING]</span> 
+                      <span>TASK: [Dim_Control] {"->"} [Current_Device: TV_01] {"->"} [Op: Brightness++]</span>
+                    </div>
+                    <div className="flex gap-3">
+                      <span className="text-slate-500">[SAFETY]</span> 
+                      <span>VERIFY: User_ECG matched. Action Authorized.</span>
+                    </div>
+                 </div>
+                 <div className="absolute inset-0 bg-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                    <button className="bg-white/90 text-slate-900 px-6 py-2.5 rounded-full font-bold text-xs shadow-xl flex items-center gap-2 hover:bg-white transition-all">
+                       <Terminal size={14} /> 进入内核诊断模式
+                    </button>
+                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'knowledge' && (
+          <div className="animate-in fade-in duration-700">
+            <h3 className="text-2xl font-black mb-8 text-slate-900 flex items-center gap-3">
+               <ListTree size={24} className="text-indigo-600" /> 全域知识图谱：决策背后的逻辑支撑
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-12">
+              {domains.map((d) => (
+                <div 
+                  key={d.id} 
+                  onClick={() => setSelectedModule(d)}
+                  className="p-6 bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group cursor-pointer relative overflow-hidden"
+                >
+                  <div className={`absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-${d.color}-500/5 rounded-full`}></div>
+                  <div className={`w-12 h-12 rounded-2xl bg-${d.color}-50 text-${d.color}-600 flex items-center justify-center mb-5 group-hover:rotate-12 transition-transform`}>
+                    <d.icon size={26} />
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-bold text-slate-800 tracking-tight">{d.name}</h4>
+                    <ChevronDown size={14} className="text-slate-300 group-hover:translate-y-1 transition-transform" />
+                  </div>
+                  <p className="text-[11px] text-slate-400 leading-relaxed mb-6">{d.desc}</p>
+                  <div className="flex items-center gap-2 text-[9px] font-black text-indigo-500 uppercase tracking-widest border-t border-slate-50 pt-4">
+                    <Code size={10} /> 查阅系统架构规范
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="p-10 bg-slate-900 rounded-[3rem] text-white flex flex-col md:flex-row items-center gap-12 shadow-2xl relative overflow-hidden">
+               <div className="absolute left-0 top-0 w-1/2 h-full opacity-5 pointer-events-none">
+                  <GitGraph size={400} />
+               </div>
+               <div className="shrink-0 w-28 h-28 bg-indigo-500/10 rounded-full flex items-center justify-center outline outline-1 outline-indigo-500/30 outline-offset-8">
+                 <Database size={48} className="text-indigo-400" />
+               </div>
+               <div className="relative z-10">
+                 <h4 className="text-xl font-bold mb-4 flex items-center gap-3">
+                   <Sparkles className="text-amber-400" /> 
+                   Memory OS：基于因果链的演进记忆
+                 </h4>
+                 <p className="text-sm opacity-60 leading-relaxed max-w-2xl">
+                   我们不存储碎片化的对话历史，而是构建一套具有<b>时序感知能力的因果索引</b>。
+                   系统通过 GraphRAG 技术，自动识别用户偏好的漂移路径。
+                   例如：当系统识别到你最近减少了咖啡因摄入，它会自动修正相关任务链的默认参数，无需用户再次申明。
+                 </p>
+                 <div className="mt-6 flex gap-3">
+                    <div className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-bold text-slate-400 uppercase tracking-widest">Temporal Indexing</div>
+                    <div className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-bold text-slate-400 uppercase tracking-widest">Causal Mapping</div>
+                 </div>
+               </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'agents' && (
+          <div className="animate-in fade-in duration-700">
+            <h3 className="text-2xl font-black mb-2 text-slate-900">100 个智能体原子能力矩阵</h3>
+            <p className="text-slate-500 mb-8 text-sm italic">每一个能力都是经过形式化验证（Formal Verification）的独立执行单元。</p>
+            <CapabilityMatrix />
+          </div>
+        )}
+
+        {activeTab === 'strategy' && (
+          <div className="animate-in fade-in duration-700">
+            <h3 className="text-2xl font-black mb-12 text-slate-900">核心战略护城河 (Moat Strategy)</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+              {[
+                { title: "Agentic Orchestration", icon: Network, bg: "bg-indigo-600", desc: "自研任务编排语言（APDL），支持分布式环境下 Agent 的动态发现与角色接管。具备行业领先的鲁棒性。" },
+                { title: "Personal Memory OS", icon: Database, bg: "bg-slate-900", desc: "端侧隐私优先的记忆中枢。通过独特的遗忘曲线算法与权重衰减机制，让 AI 拥有类似人类的‘成长性’认知。" },
+                { title: "Unified Tool-Bus", icon: Wrench, bg: "bg-emerald-600", desc: "统一的硬件接管层。通过 IDL（接口定义语言）解耦硬件协议，实现对 Matter/Zigbee 设备的即插即用化智能接管。" }
+              ].map((s, i) => (
+                <div key={i} className={`p-10 rounded-[2.5rem] ${s.bg} text-white hover:shadow-2xl hover:scale-[1.02] transition-all cursor-default relative overflow-hidden group`}>
+                  <s.icon size={120} className="absolute -right-10 -bottom-10 opacity-10 group-hover:scale-125 transition-transform" />
+                  <h4 className="text-xl font-bold mb-4 relative z-10">{s.title}</h4>
+                  <p className="text-sm opacity-70 leading-relaxed relative z-10">{s.desc}</p>
+                </div>
+              ))}
+            </div>
+            
+            {/* Engineering Specs */}
+            <div className="bg-white rounded-[3.5rem] p-12 border border-slate-200 shadow-sm flex flex-col lg:flex-row gap-16">
+               <div className="flex-1 space-y-8">
+                 <h4 className="text-3xl font-black flex items-center gap-4 text-slate-800 tracking-tight">
+                   <Globe size={32} className="text-indigo-600" /> 面向万物互联的<br />Agent 生态入口
+                 </h4>
+                 <p className="text-slate-500 leading-relaxed font-medium">
+                   戒指只是载体，我们的核心壁垒在于这套能运行在极低功耗设备上的 <b>Embodied AI Kernel</b>。
+                   它是连接用户物理意图与数字服务的最终枢纽。
+                 </p>
+                 <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                       <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">可观测性</h5>
+                       <p className="text-sm font-bold text-slate-700">全链路决策追踪 (Tracing)</p>
+                    </div>
+                    <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                       <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">合规性</h5>
+                       <p className="text-sm font-bold text-slate-700">GDPR/CCPA 隐私对齐</p>
+                    </div>
+                 </div>
+               </div>
+               <div className="flex-1 bg-slate-900 rounded-[2.5rem] p-10 flex items-center justify-center relative">
+                 <div className="absolute inset-0 bg-indigo-500/10 animate-pulse rounded-[2.5rem]"></div>
+                 <div className="grid grid-cols-2 gap-10 relative z-10">
+                   <div className="text-center">
+                      <div className="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-2">P95 对齐延迟</div>
+                      <div className="text-4xl font-black text-white">120<span className="text-indigo-500 text-lg">ms</span></div>
+                   </div>
+                   <div className="text-center">
+                      <div className="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-2">安全等级</div>
+                      <div className="text-4xl font-black text-white">EAL6<span className="text-emerald-500 text-lg">+</span></div>
+                   </div>
+                   <div className="text-center">
+                      <div className="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-2">端侧推理功耗</div>
+                      <div className="text-4xl font-black text-white">45<span className="text-amber-500 text-lg">mW</span></div>
+                   </div>
+                   <div className="text-center">
+                      <div className="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-2">Agent 并发数</div>
+                      <div className="text-4xl font-black text-white">50<span className="text-indigo-500 text-lg">+</span></div>
+                   </div>
+                 </div>
+               </div>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Footer Content */}
+      <footer className="mt-32 py-20 border-t border-slate-200 text-center bg-white">
+        <div className="flex justify-center gap-12 mb-10 text-slate-300">
+           <Smartphone size={32} className="hover:text-indigo-600 transition-colors cursor-pointer" />
+           <Network size={32} className="hover:text-indigo-600 transition-colors cursor-pointer" />
+           <ShieldEllipsis size={32} className="hover:text-indigo-600 transition-colors cursor-pointer" />
+           <Workflow size={32} className="hover:text-indigo-600 transition-colors cursor-pointer" />
+        </div>
+        <p className="text-slate-400 text-[11px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3">
+          EMBODIED AGENT OS SPECIFICATION <span className="text-slate-200 text-lg">|</span> CONFIDENTIAL <span className="text-slate-200 text-lg">|</span> © 2026 RING AI TECHNOLOGIES
+        </p>
+      </footer>
+
+      {/* Tailwind specific custom styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fade-in 0.6s ease-out forwards; }
+      `}} />
+    </div>
+  );
+};
+
+export default App;
